@@ -1,6 +1,7 @@
 import React from 'react'
-import ModernChatApp from './components/ModernChatApp'
+import AppLayout from './AppLayout'
 import useChat from './hooks/useChat'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 function App() {
   const {
@@ -12,13 +13,15 @@ function App() {
   } = useChat()
 
   return (
-    <ModernChatApp
-      messages={messages}
-      inputMessage={inputMessage}
-      setInputMessage={setInputMessage}
-      sendMessage={sendMessage}
-      isLoading={isLoading}
-    />
+    <ThemeProvider>
+      <AppLayout
+        messages={messages}
+        inputMessage={inputMessage}
+        setInputMessage={setInputMessage}
+        sendMessage={sendMessage}
+        isLoading={isLoading}
+      />
+    </ThemeProvider>
   )
 }
 
