@@ -1,17 +1,34 @@
 from app.models.schemas import ChatMessage, MessageRole
-from typing import List
+from app.config import settings
+from typing import List, Dict, Any, Optional
+import torch
 import random
 from datetime import datetime
+import logging
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    pipeline
+)
+import gc
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class SinglishModelService:
     """
-    Placeholder model service for Singlish chatbot.
-    Returns mock Singlish responses for MVP.
-    Ready for integration with actual fine-tuned model.
+    Production-ready model service for Singlish chatbot.
+    Integrates with Hugging Face models.
+    Falls back to mock responses when model is not available.
     """
 
     def __init__(self):
-        # Mock Singlish responses for common patterns
+        self.pipeline = None
+        self.device = None
+        self.model_loaded = False
+
+        # Mock Singlish responses for fallback
         self.mock_responses = [
             "Wah lah eh, that one quite interesting leh!",
             "Can can, no problem bro!",
@@ -53,13 +70,112 @@ class SinglishModelService:
             ]
         }
 
+        # Try to load the model
+        self._load_model()
+
+    def _load_model(self):
+        """Load the model and tokenizer from Hugging Face."""
+        try:
+            logger.info("Loading model from Hugging Face...")
+
+            # Determine device
+            if settings.device == "auto":
+                self.device = 0 if torch.cuda.is_available() else -1  # 0 for first GPU, -1 for CPU
+            else:
+                self.device = 0 if settings.device == "cuda" and torch.cuda.is_available() else -1
+
+            logger.info(f"Using device: {'CUDA' if self.device >= 0 else 'CPU'}")
+
+            # Create text generation pipeline (simpler approach)
+            self.pipeline = pipeline(
+                "text-generation",
+                model=settings.base_model_name,
+                token=settings.hf_token,
+                torch_dtype=torch.float16 if self.device >= 0 else torch.float32,
+                device=self.device,
+                trust_remote_code=True
+            )
+
+            self.model_loaded = True
+            logger.info("Model loaded successfully!")
+
+        except Exception as e:
+            logger.error(f"Failed to load model: {str(e)}")
+            logger.warning("Falling back to mock responses")
+            self.pipeline = None
+            self.model_loaded = False
+
+    def _format_conversation(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
+        """Format conversation history and current message for the model."""
+        if conversation_history is None:
+            conversation_history = []
+
+        # Simple conversation format (compatible with most models)
+        conversation = f"System: {settings.system_prompt}\n\n"
+
+        # Add conversation history (last 3 messages to avoid context overflow)
+        for msg in conversation_history[-3:]:
+            if msg.role == MessageRole.USER:
+                conversation += f"User: {msg.content}\nAssistant: "
+            elif msg.role == MessageRole.ASSISTANT:
+                conversation += f"{msg.content}\n"
+
+        # Add current message
+        conversation += f"User: {message}\nAssistant: "
+
+        return conversation
+
+    def _generate_with_model(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
+        """Generate response using the loaded model."""
+        if not self.model_loaded or self.pipeline is None:
+            raise ValueError("Model not loaded")
+
+        try:
+            # Format conversation
+            formatted_input = self._format_conversation(message, conversation_history)
+
+            # Generate response
+            outputs = self.pipeline(
+                formatted_input,
+                max_new_tokens=settings.max_new_tokens,
+                temperature=settings.temperature,
+                top_p=settings.top_p,
+                do_sample=settings.do_sample,
+                pad_token_id=self.pipeline.tokenizer.eos_token_id,
+                eos_token_id=self.pipeline.tokenizer.eos_token_id,
+                early_stopping=True,
+                return_full_text=False  # Only return the generated part
+            )
+
+            response_text = outputs[0]["generated_text"].strip()
+
+            # Clean up memory
+            if self.device >= 0:
+                torch.cuda.empty_cache()
+            gc.collect()
+
+            return response_text
+
+        except Exception as e:
+            logger.error(f"Error generating response: {str(e)}")
+            raise ValueError(f"Generation failed: {str(e)}")
+
     def generate_response(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
         """
         Generate a Singlish response based on the input message and conversation history.
+        Tries to use the loaded model first, falls back to mock responses.
         """
         if conversation_history is None:
             conversation_history = []
 
+        # Try to use the model if loaded
+        if self.model_loaded:
+            try:
+                return self._generate_with_model(message, conversation_history)
+            except Exception as e:
+                logger.error(f"Model generation failed, falling back to mock: {str(e)}")
+
+        # Fallback to mock responses
         message_lower = message.lower().strip()
 
         # Check for simple contextual responses
@@ -82,6 +198,17 @@ class SinglishModelService:
 
         # Default response with some personality
         return random.choice(self.mock_responses)
+
+    def get_model_status(self) -> Dict[str, Any]:
+        """Get the current status of the model service."""
+        return {
+            "model_loaded": self.model_loaded,
+            "device": "CUDA" if self.device >= 0 else "CPU",
+            "base_model": settings.base_model_name,
+            "adapter_repo": settings.adapter_repo_name,
+            "quantization": "none",
+            "torch_dtype": "float16" if self.device >= 0 else "float32"
+        }
 
 # Singleton instance
 model_service = SinglishModelService()

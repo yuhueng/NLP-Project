@@ -37,17 +37,31 @@ async def health_check():
         timestamp=datetime.now()
     )
 
+@router.get("/model-status")
+async def model_status():
+    """
+    Get the current status of the loaded model.
+    """
+    return {
+        "status": "ok",
+        "model": model_service.get_model_status()
+    }
+
 @router.get("/")
 async def chat_info():
     """
     Information about the chat API.
     """
+    model_status_info = model_service.get_model_status()
+
     return {
         "message": "Singlish Chatbot API",
         "version": "1.0.0",
         "endpoints": {
             "chat": "/api/chat",
-            "health": "/api/health"
+            "health": "/api/health",
+            "model_status": "/api/model-status"
         },
-        "status": "operational"
+        "status": "operational",
+        "model": model_status_info
     }

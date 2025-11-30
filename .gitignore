@@ -159,11 +159,3 @@ Thumbs.db
 *.h5
 *.pth
 *.pt
-
-# Claude Code configuration (keep this)
-!.claude/
-
-# Project specific
-CLAUDE.md
-SKILL.md
-STYLES.md
