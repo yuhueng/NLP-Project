@@ -17,6 +17,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+    safety: str
     timestamp: datetime
 
 class HealthCheck(BaseModel):

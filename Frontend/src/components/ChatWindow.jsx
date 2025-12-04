@@ -88,6 +88,7 @@ function ChatWindow({
                 <MessageBubble
                   message={message.content}
                   isUser={message.role === 'user'}
+                  safety={message.safety}
                 />
               </div>
             ))}

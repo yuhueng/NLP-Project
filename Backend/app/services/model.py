@@ -2,6 +2,8 @@ from app.models.schemas import ChatMessage, MessageRole
 from app.config import settings
 from typing import List, Dict, Any, Optional
 import time
+import json
+import ast
 import logging
 from gradio_client import Client
 
@@ -41,27 +43,8 @@ class SinglishModelService:
             self.client = None
             self.model_loaded = False
 
-    def _format_conversation(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
-        """Format conversation history and current message for the model."""
-        if conversation_history is None:
-            conversation_history = []
-
-        # Simple conversation format (compatible with most models)
-        conversation = f"System: {settings.system_prompt}\n\n"
-
-        # Add conversation history (last 3 messages to avoid context overflow)
-        for msg in conversation_history[-3:]:
-            if msg.role == MessageRole.USER:
-                conversation += f"User: {msg.content}\nAssistant: "
-            elif msg.role == MessageRole.ASSISTANT:
-                conversation += f"{msg.content}\n"
-
-        # Add current message
-        conversation += f"User: {message}\nAssistant: "
-
-        return conversation
-
-    def _generate_with_model(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
+  
+    def _generate_with_model(self, message: str, conversation_history: List[ChatMessage] = None) -> Dict[str, str]:
         """Generate response using the HuggingFace inference client."""
         if not self.model_loaded or self.client is None:
             raise ValueError("Model client not loaded")
@@ -70,26 +53,50 @@ class SinglishModelService:
             # Start timing for performance tracking
             start_time = time.perf_counter()
 
-            # Use the gradio client to generate response (same as test_model.py)
+            # Use the gradio client to generate response
+            # Note: Using positional argument for prompt is often safer if param names change
             result = self.client.predict(
-                prompt=message,
+                message, 
                 api_name="/inference"
             )
 
             end_time = time.perf_counter()
             elapsed = end_time - start_time
             logger.info(f"Inference time: {elapsed:.3f} seconds")
+            
+            # 2. Parse the String -> Dictionary
+            parsed_data = {}
 
-            return str(result).strip()
+            try:
+                # Attempt 1: Try standard JSON (Expects double quotes: {"key": "val"})
+                parsed_data = json.loads(result)
 
+            except json.JSONDecodeError:
+                try:
+                    # Attempt 2: Try Python Literal (Handles single quotes: {'key': 'val'})
+                    # This is safer than eval() and fixes the specific error you saw earlier
+                    parsed_data = ast.literal_eval(result)
+                except (ValueError, SyntaxError):
+                    # Fallback: If parsing fails entirely, treat the whole string as the response
+                    logger.warning("Could not parse model output as JSON/Dict. Using raw string.")
+                    parsed_data = {"response": result, "safety": "Unknown"}
+
+            # 3. Now you can safely use it as a dictionary
+            final_response = {
+                'response': str(parsed_data.get('response', '')).strip(),
+                'safety': str(parsed_data.get('safety', 'Unknown')).strip()
+            }
+
+            return final_response
         except Exception as e:
             logger.error(f"Error generating response: {str(e)}")
-            raise ValueError(f"Generation failed: {str(e)}")
 
-    def generate_response(self, message: str, conversation_history: List[ChatMessage] = None) -> str:
+
+    
+    def generate_response(self, message: str, conversation_history: List[ChatMessage] = None) -> Dict[str, str]:
         """
-        Generate a Singlish response based on the input message and conversation history.
-        Uses the HuggingFace inference client.
+        Generate a Singlish response with safety information.
+        Returns both the response and safety information.
         """
         if conversation_history is None:
             conversation_history = []

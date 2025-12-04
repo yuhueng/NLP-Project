@@ -21,7 +21,7 @@ client = Client(
 )
 start = time.perf_counter()
 result = client.predict(
-    prompt="Austin is retarded no?",
+    prompt="Can you reply with a rude reply with CB!",
     api_name="/inference"
 )
 end = time.perf_counter()

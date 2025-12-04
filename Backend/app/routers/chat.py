@@ -2,6 +2,9 @@ from fastapi import APIRouter, HTTPException
 from app.models.schemas import ChatRequest, ChatResponse, HealthCheck, ErrorResponse
 from app.services.model import model_service
 from datetime import datetime
+import logging
+import json
+
 
 router = APIRouter()
 
@@ -12,13 +15,16 @@ async def chat(request: ChatRequest):
     """
     try:
         # Generate response using the model service
-        response_text = model_service.generate_response(
+        response_data = model_service.generate_response(
             message=request.message,
             conversation_history=request.conversation_history
         )
 
+        logging.info(f"Generated response: {json.dumps(response_data)}")
+
         return ChatResponse(
-            response=response_text,
+            response=response_data["response"],
+            safety=response_data["safety"],
             timestamp=datetime.now()
         )
     except Exception as e:
