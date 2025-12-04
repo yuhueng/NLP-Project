@@ -21,19 +21,21 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. Built w
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.11 or below (Due to older dependencies used)
 - Node.js 18 or higher
 - npm or yarn
 
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd "NLP Project Interface"
    ```
 
 2. **Backend Setup**
+
    ```bash
    cd Backend
 
@@ -51,6 +53,7 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. Built w
    ```
 
 3. **Frontend Setup**
+
    ```bash
    cd Frontend
 
@@ -61,6 +64,7 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. Built w
 4. **Run the Application**
 
    **Terminal 1 - Backend:**
+
    ```bash
    cd Backend
    # Make sure virtual environment is activated
@@ -68,6 +72,7 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. Built w
    ```
 
    **Terminal 2 - Frontend:**
+
    ```bash
    cd Frontend
    npm run dev
@@ -80,25 +85,27 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. Built w
 
 ## API Endpoints
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/chat` | POST | Send message, receive response |
-| `/api/health` | GET | Health check |
+| Endpoint      | Method | Purpose                        |
+| ------------- | ------ | ------------------------------ |
+| `/api/chat`   | POST   | Send message, receive response |
+| `/api/health` | GET    | Health check                   |
 
 ### POST `/api/chat`
 
 **Request:**
+
 ```json
 {
   "message": "Hello how are you?",
   "conversation_history": [
-    {"role": "user", "content": "Previous message"},
-    {"role": "assistant", "content": "Previous response"}
+    { "role": "user", "content": "Previous message" },
+    { "role": "assistant", "content": "Previous response" }
   ]
 }
 ```
 
 **Response:**
+
 ```json
 {
   "response": "Wah hello bro! I'm doing great lah, you?",
@@ -206,21 +213,25 @@ The architecture is designed to accommodate future enhancements:
 ### Common Issues
 
 **Backend won't start:**
+
 - Ensure Python 3.10+ is installed
 - Check if virtual environment is activated
 - Verify all requirements are installed
 
 **Frontend won't start:**
+
 - Ensure Node.js 18+ is installed
 - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
 - Check if port 5173 is available
 
 **CORS errors:**
+
 - Ensure backend is running on port 8000
 - Check CORS configuration in `Backend/app/main.py`
 - Verify Vite proxy configuration in `Frontend/vite.config.js`
 
 **API connection issues:**
+
 - Check backend health: http://localhost:8000/api/health
 - Verify API endpoints in browser
 - Check browser console for network errors

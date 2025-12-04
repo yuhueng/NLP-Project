@@ -1,5 +1,6 @@
-from pydantic_settings import BaseSettings
-from typing import Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional, List
+from pydantic import field_validator
 
 class Settings(BaseSettings):
     # API Configuration
@@ -7,17 +8,27 @@ class Settings(BaseSettings):
     api_version: str = "1.0.0"
     debug: bool = True
 
-    # CORS Configuration
-    cors_origins: list = ["http://localhost:5173"]
+    # CORS Configuration - use str to avoid JSON parsing issues
+    cors_origins: str = "http://localhost:5173"
+
+    @field_validator('cors_origins', mode='after')
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if isinstance(v, str):
+            # Split by comma and clean up
+            origins = [origin.strip() for origin in v.split(',') if origin.strip()]
+            return origins
+        return v if v else ["http://localhost:5173"]
 
     # Hugging Face Model Configuration
     # Base model (e.g., meta-llama/Llama-2-7b-chat-hf, mistralai/Mistral-7B-Instruct-v0.1)
-    base_model_name: str = "meta-llama/Llama-2-7b-chat-hf"
+    base_model_name: str = "yuhueng/qwen3-4b-singlish-base"
 
-    # Your fine-tuned adapter repository on Hugging Face
-    adapter_repo_name: str = "YOUR_USERNAME/singlish-llama-adapter"
+    # Your fine-tuned adapter repository on Hugging Face (set to None if not trained yet)
+    adapter_repo_name: Optional[str] = None
 
     # Hugging Face token for accessing private models
+    # You can set this as environment variable: HF_TOKEN=your_token_here
     hf_token: Optional[str] = None
 
     # Model loading configuration
@@ -41,13 +52,17 @@ class Settings(BaseSettings):
     # Legacy fields (kept for compatibility)
     model_name: str = base_model_name
     model_path: str = base_model_name
-    adapter_path: str = adapter_repo_name
+    adapter_path: Optional[str] = None  # Will be set if adapter_repo_name is provided
 
     # Server Configuration
     host: str = "0.0.0.0"
     port: int = 8000
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        protected_namespaces=('settings_',),
+        case_sensitive=False
+    )
 
 settings = Settings()
