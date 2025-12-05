@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Header from './components/Header'
 import LeftSidebar from './components/LeftSidebar'
 import ChatWindow from './components/ChatWindow'
 
-function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading, isBackendReady }) {
-  const [currentPersona, setCurrentPersona] = useState('default')
+function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading, isBackendReady, currentPersona, setCurrentPersona }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleNewChat = () => {
-    // Clear messages and start fresh chat
+    // Clear messages and start fresh chat - needs to be implemented in useChat
     setInputMessage('')
-    // You might want to dispatch a clear messages action here
+    window.location.reload() // Temporary solution to clear chat
   }
 
   const handlePersonaChange = (personaId) => {
@@ -22,8 +21,8 @@ function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoa
     <div className="h-screen bg-gray-100 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header - Fixed at top */}
       <Header
-        title="Singlish Chatbot"
-        subtitle={`Persona: ${currentPersona}`}
+        title="Multi-Persona Chatbot"
+        subtitle={`Active Persona: ${currentPersona.charAt(0).toUpperCase() + currentPersona.slice(1)}`}
       />
 
       {/* Main Content Area - Takes remaining height */}

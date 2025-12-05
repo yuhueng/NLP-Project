@@ -1,12 +1,28 @@
 import React from 'react'
 
-function LeftSidebar({ onNewChat, onPersonaChange, currentPersona = "default" }) {
+function LeftSidebar({ onNewChat, onPersonaChange, currentPersona = "singlish" }) {
   const personas = [
-    { id: "default", name: "Friendly Assistant", icon: "😊", description: "Helpful and approachable" },
-    { id: "formal", name: "Professional", icon: "👔", description: "Formal and informative" },
-    { id: "casual", name: "Kaki", icon: "🤙", description: "Very casual, like talking to a friend" },
-    { id: "uncle", name: "Uncle", icon: "👴", description: "Classic Singapore uncle style" },
-    { id: "aunty", name: "Aunty", icon: "👵", description: "Warm and caring aunty persona" }
+    {
+      id: "singlish",
+      name: "Singlish",
+      icon: "🇸🇬",
+      description: "Friendly Singaporean assistant",
+      endpoint: "/chat/singlish"
+    },
+    {
+      id: "xmm",
+      name: "XMM",
+      icon: "💁‍♀️",
+      description: "XMM personality chatbot",
+      endpoint: "/chat/xmm"
+    },
+    {
+      id: "ahbeng",
+      name: "Ah Beng",
+      icon: "😎",
+      description: "Classic Ah Beng style",
+      endpoint: "/chat/ahbeng"
+    }
   ]
 
   return (

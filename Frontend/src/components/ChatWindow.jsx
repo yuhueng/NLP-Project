@@ -42,14 +42,39 @@ function ChatWindow({
     }
   }
 
-  const quickPrompts = [
-    "Can you explain this Singlish phrase?",
-    "What's the best hawker centre?",
-    "How do I get around Singapore?",
-    "Tell me about local customs",
-    "Weather today",
-    "MRT guide"
-  ]
+  const getQuickPrompts = () => {
+    switch(currentPersona) {
+      case 'singlish':
+        return [
+          "Can you explain this Singlish phrase?",
+          "What's the best hawker centre?",
+          "How do I get around Singapore?",
+          "Tell me about local customs",
+          "Weather today",
+          "MRT guide"
+        ]
+      case 'ahbeng':
+        return [
+          "What's good bro?",
+          "Where got best kopi?",
+          "Recommend me some shiok places",
+          "Talk about cars leh",
+          "What's happening tonight?",
+          "Tell me your story"
+        ]
+      default: // xmm and others
+        return [
+          "What's trending today?",
+          "Tell me something interesting",
+          "What do you think about...",
+          "Can you help me with...",
+          "What's your opinion on...",
+          "Tell me a story"
+        ]
+    }
+  }
+
+  const quickPrompts = getQuickPrompts()
 
   return (
     <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-900">
@@ -80,9 +105,15 @@ function ChatWindow({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5m-1-4H7m4 0v8m-4 0h2m3 0h2m-6-0h2" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to Singlish Chatbot</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              Welcome to {currentPersona.charAt(0).toUpperCase() + currentPersona.slice(1)} Chat
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md">
-              Ask me anything about Singapore culture, Singlish phrases, local food, or anything else!
+              {currentPersona === 'singlish'
+                ? "Ask me anything about Singapore culture, Singlish phrases, local food, or anything else!"
+                : currentPersona === 'ahbeng'
+                ? "Wah bro! Talk to me about anything lah - cars, food, life stories, you name it!"
+                : "Chat with the XMM persona! Ask me anything you like."}
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl">

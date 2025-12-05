@@ -45,10 +45,11 @@ api.interceptors.response.use(
 
 // Chat API functions
 export const chatAPI = {
-  // Send message to chatbot
-  sendMessage: async (message, conversationHistory = []) => {
+  // Send message to chatbot with persona support
+  sendMessage: async (message, conversationHistory = [], persona = 'singlish') => {
     try {
-      const response = await api.post('/chat', {
+      const endpoint = `/chat/${persona}`
+      const response = await api.post(endpoint, {
         message: message,
         conversation_history: conversationHistory
       })

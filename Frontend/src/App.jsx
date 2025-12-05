@@ -1,4 +1,3 @@
-import React from 'react'
 import AppLayout from './AppLayout'
 import useChat from './hooks/useChat'
 import { ThemeProvider } from './contexts/ThemeContext'
@@ -10,7 +9,9 @@ function App() {
     setInputMessage,
     sendMessage,
     isLoading,
-    isBackendReady
+    isBackendReady,
+    currentPersona,
+    setCurrentPersona
   } = useChat()
 
   return (
@@ -22,6 +23,8 @@ function App() {
         sendMessage={sendMessage}
         isLoading={isLoading}
         isBackendReady={isBackendReady}
+        currentPersona={currentPersona}
+        setCurrentPersona={setCurrentPersona}
       />
     </ThemeProvider>
   )

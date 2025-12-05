@@ -7,6 +7,7 @@ function useChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isBackendReady, setIsBackendReady] = useState(false);
+  const [currentPersona, setCurrentPersona] = useState('singlish');
 
   const sendMessage = useCallback(
     async (messageText) => {
@@ -30,10 +31,11 @@ function useChat() {
           content: msg.content,
         }));
 
-        // Send message to backend
+        // Send message to backend with persona
         const response = await chatAPI.sendMessage(
           messageText,
-          conversationHistory
+          conversationHistory,
+          currentPersona
         );
 
         console.log("API Response:", response);
@@ -78,7 +80,7 @@ function useChat() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading]
+    [messages, isLoading, currentPersona]
   );
 
   const clearMessages = useCallback(() => {
@@ -148,6 +150,8 @@ function useChat() {
     isLoading,
     error,
     isBackendReady,
+    currentPersona,
+    setCurrentPersona,
   };
 }
 
