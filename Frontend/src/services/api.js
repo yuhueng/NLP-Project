@@ -1,8 +1,18 @@
 import axios from 'axios'
 
+// Determine API base URL based on environment
+const getBaseURL = () => {
+  // In production (Vercel), use the Render backend URL
+  // In development, use relative path (Vite proxy will handle it)
+  if (import.meta.env.PROD) {
+    return 'https://nlp-project-06lg.onrender.com/api'
+  }
+  return '/api'
+}
+
 // Create axios instance with default configuration
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getBaseURL(),
   timeout: 30000, // 30 seconds timeout
   headers: {
     'Content-Type': 'application/json',
