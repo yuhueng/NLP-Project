@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     debug: bool = True
 
     # CORS Configuration (hardcoded)
-    cors_origins: List[str] = ["http://localhost:5173"]
+    cors_origins: List[str] = ["http://localhost:5173", "yh-singlish-chatbot.vercel.app"]
 
     # Hugging Face Model Configuration (hardcoded)
     base_model_name: str = "yuhueng/qwen3-4b-singlish-base"
