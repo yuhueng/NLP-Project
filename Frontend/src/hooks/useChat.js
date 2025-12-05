@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { chatAPI } from "../services/api";
 
 function useChat() {
@@ -6,6 +6,8 @@ function useChat() {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isBackendReady, setIsBackendReady] = useState(false);
+  const [backendCheckAttempts, setBackendCheckAttempts] = useState(0);
 
   const sendMessage = useCallback(
     async (messageText) => {
@@ -97,6 +99,48 @@ function useChat() {
     }
   }, [messages, sendMessage]);
 
+  // Check backend health on app load
+  const checkBackendHealth = useCallback(async () => {
+    try {
+      setBackendCheckAttempts((prev) => prev + 1);
+      console.log(`Checking backend health (attempt ${backendCheckAttempts + 1})...`);
+
+      await chatAPI.healthCheck();
+
+      console.log("Backend is ready!");
+      setIsBackendReady(true);
+      return true;
+    } catch (err) {
+      console.error("Backend health check failed:", err);
+      return false;
+    }
+  }, [backendCheckAttempts]);
+
+  // Run health check on mount and retry if needed
+  useEffect(() => {
+    let timeoutId;
+
+    const performHealthCheck = async () => {
+      const isHealthy = await checkBackendHealth();
+
+      if (!isHealthy) {
+        // Retry with exponential backoff (max 30 seconds)
+        const retryDelay = Math.min(3000 * Math.pow(1.5, backendCheckAttempts), 30000);
+        console.log(`Retrying health check in ${retryDelay / 1000}s...`);
+
+        timeoutId = setTimeout(performHealthCheck, retryDelay);
+      }
+    };
+
+    performHealthCheck();
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [checkBackendHealth, backendCheckAttempts]);
+
   return {
     messages,
     inputMessage,
@@ -106,6 +150,7 @@ function useChat() {
     retryLastMessage,
     isLoading,
     error,
+    isBackendReady,
   };
 }
 

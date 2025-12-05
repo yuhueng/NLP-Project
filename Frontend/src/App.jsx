@@ -9,7 +9,8 @@ function App() {
     inputMessage,
     setInputMessage,
     sendMessage,
-    isLoading
+    isLoading,
+    isBackendReady
   } = useChat()
 
   return (
@@ -20,6 +21,7 @@ function App() {
         setInputMessage={setInputMessage}
         sendMessage={sendMessage}
         isLoading={isLoading}
+        isBackendReady={isBackendReady}
       />
     </ThemeProvider>
   )

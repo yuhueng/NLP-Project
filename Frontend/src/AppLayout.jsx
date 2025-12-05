@@ -3,7 +3,7 @@ import Header from './components/Header'
 import LeftSidebar from './components/LeftSidebar'
 import ChatWindow from './components/ChatWindow'
 
-function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading }) {
+function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading, isBackendReady }) {
   const [currentPersona, setCurrentPersona] = useState('default')
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
@@ -75,6 +75,7 @@ function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoa
             setInputMessage={setInputMessage}
             sendMessage={sendMessage}
             isLoading={isLoading}
+            isBackendReady={isBackendReady}
             currentPersona={currentPersona}
           />
         </div>
