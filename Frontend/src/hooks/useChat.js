@@ -7,7 +7,6 @@ function useChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isBackendReady, setIsBackendReady] = useState(false);
-  const [backendCheckAttempts, setBackendCheckAttempts] = useState(0);
 
   const sendMessage = useCallback(
     async (messageText) => {
@@ -99,47 +98,45 @@ function useChat() {
     }
   }, [messages, sendMessage]);
 
-  // Check backend health on app load
-  const checkBackendHealth = useCallback(async () => {
-    try {
-      setBackendCheckAttempts((prev) => prev + 1);
-      console.log(`Checking backend health (attempt ${backendCheckAttempts + 1})...`);
-
-      await chatAPI.healthCheck();
-
-      console.log("Backend is ready!");
-      setIsBackendReady(true);
-      return true;
-    } catch (err) {
-      console.error("Backend health check failed:", err);
-      return false;
-    }
-  }, [backendCheckAttempts]);
-
   // Run health check on mount and retry if needed
   useEffect(() => {
     let timeoutId;
+    let attemptCount = 0;
+    let isActive = true;
 
     const performHealthCheck = async () => {
-      const isHealthy = await checkBackendHealth();
+      if (!isActive) return;
 
-      if (!isHealthy) {
-        // Retry with exponential backoff (max 30 seconds)
-        const retryDelay = Math.min(3000 * Math.pow(1.5, backendCheckAttempts), 30000);
-        console.log(`Retrying health check in ${retryDelay / 1000}s...`);
+      try {
+        attemptCount++;
+        console.log(`Checking backend health (attempt ${attemptCount})...`);
 
-        timeoutId = setTimeout(performHealthCheck, retryDelay);
+        await chatAPI.healthCheck();
+
+        console.log("Backend is ready!");
+        setIsBackendReady(true);
+      } catch (err) {
+        console.error("Backend health check failed:", err);
+
+        if (isActive) {
+          // Retry with exponential backoff (max 30 seconds)
+          const retryDelay = Math.min(3000 * Math.pow(1.5, attemptCount - 1), 30000);
+          console.log(`Retrying health check in ${retryDelay / 1000}s...`);
+
+          timeoutId = setTimeout(performHealthCheck, retryDelay);
+        }
       }
     };
 
     performHealthCheck();
 
     return () => {
+      isActive = false;
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
-  }, [checkBackendHealth, backendCheckAttempts]);
+  }, []); // Empty dependency array - only run once on mount
 
   return {
     messages,
