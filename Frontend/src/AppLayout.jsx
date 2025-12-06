@@ -26,9 +26,16 @@ function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoa
       />
 
       {/* Main Content Area - Takes remaining height */}
-      <div className="flex-1 flex overflow-hidden h-full">
+      <div className="flex-1 flex overflow-hidden h-full relative">
         {/* Left Sidebar - Collapsible */}
-        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 flex-shrink-0 overflow-hidden h-full`}>
+        {/* Desktop: inline sidebar, Mobile: fixed overlay sidebar */}
+        <div className={`
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:${sidebarOpen ? 'w-80' : 'w-0'}
+          fixed lg:relative inset-y-0 left-0 z-30
+          w-80 transition-all duration-300 flex-shrink-0 overflow-hidden h-full
+          lg:translate-x-0
+        `}>
           <LeftSidebar
             onNewChat={handleNewChat}
             onPersonaChange={handlePersonaChange}
