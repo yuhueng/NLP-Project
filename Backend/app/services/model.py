@@ -231,7 +231,7 @@ class AhBengModelService(BaseModelService):
 
             # PLACEHOLDER: Replace with actual Ah Beng model endpoint
             self.client = Client(
-                "yuhueng/AhBeng-Placeholder",  # TODO: Replace with actual Ah Beng model
+                "yuhueng/ahbeng-persona",  # TODO: Replace with actual Ah Beng model
                 token=settings.hf_token
             )
 

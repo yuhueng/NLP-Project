@@ -16,7 +16,8 @@ load_dotenv()  # This loads the .env file
 HF_TOKEN = os.getenv('HF_TOKEN')
 
 client = Client(
-    "yuhueng/SinglishTest",
+    # "yuhueng/SinglishTest",
+    "yuhueng/ahbeng-persona",
     token=HF_TOKEN,  # add your token
 )
 start = time.perf_counter()
