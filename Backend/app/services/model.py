@@ -174,9 +174,8 @@ class XMMModelService(BaseModelService):
         try:
             logger.info("Initializing XMM HuggingFace inference client...")
 
-            # PLACEHOLDER: Replace with actual XMM model endpoint
             self.client = Client(
-                "yuhueng/xmm-persona",  # TODO: Replace with actual XMM model
+                "yuhueng/xmm-persona", 
                 token=settings.hf_token
             )
 
@@ -229,9 +228,8 @@ class AhBengModelService(BaseModelService):
         try:
             logger.info("Initializing Ah Beng HuggingFace inference client...")
 
-            # PLACEHOLDER: Replace with actual Ah Beng model endpoint
             self.client = Client(
-                "yuhueng/ahbeng-persona",  # TODO: Replace with actual Ah Beng model
+                "yuhueng/ahbeng-persona",
                 token=settings.hf_token
             )
 

@@ -34,12 +34,6 @@ class Settings(BaseSettings):
     top_p: float = 0.9
     do_sample: bool = True
 
-    # System prompt for Singlish persona (hardcoded)
-    system_prompt: str = """You are a friendly Singaporean AI assistant that speaks Singlish naturally.
-    You use common Singlish expressions like "lah", "leh", "lor", "meh", "sia", "eh", "wah", "aiyoh", "alamak".
-    You are helpful, casual, and conversational. You incorporate Singaporean context and culture in your responses.
-    You should sound authentic like a real Singaporean, not forced or stereotypical."""
-
     # Legacy fields (kept for compatibility)
     model_name: str = "yuhueng/qwen3-4b-singlish-base"
     model_path: str = "yuhueng/qwen3-4b-singlish-base"
