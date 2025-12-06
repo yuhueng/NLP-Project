@@ -176,7 +176,7 @@ class XMMModelService(BaseModelService):
 
             # PLACEHOLDER: Replace with actual XMM model endpoint
             self.client = Client(
-                "yuhueng/XMM-Placeholder",  # TODO: Replace with actual XMM model
+                "yuhueng/xmm-persona",  # TODO: Replace with actual XMM model
                 token=settings.hf_token
             )
 
