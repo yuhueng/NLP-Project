@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.models.schemas import ChatRequest, ChatResponse, HealthCheck, ErrorResponse
-from app.services.model import model_service, singlish_service, xmm_service, ahbeng_service
+from app.services.model import model_service, singlish_service, xmm_service, ahbeng_service, nsf_service
 from datetime import datetime
 import logging
 import json
@@ -104,6 +104,30 @@ async def chat_ahbeng(request: ChatRequest):
             detail=str(e)
         )
 
+@router.post("/chat/nsf", response_model=ChatResponse)
+async def chat_nsf(request: ChatRequest):
+    """
+    Chat endpoint for NSF persona.
+    """
+    try:
+        response_data = nsf_service.generate_response(
+            message=request.message,
+            conversation_history=request.conversation_history
+        )
+
+        logging.info(f"[NSF] Generated response: {json.dumps(response_data)}")
+
+        return ChatResponse(
+            response=response_data["response"],
+            safety=response_data["safety"],
+            timestamp=datetime.now()
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
 @router.get("/health", response_model=HealthCheck)
 async def health_check():
     """
@@ -137,6 +161,7 @@ async def chat_info():
             "chat_singlish": "/api/chat/singlish",
             "chat_xmm": "/api/chat/xmm",
             "chat_ahbeng": "/api/chat/ahbeng",
+            "chat_nsf": "/api/chat/nsf",
             "health": "/api/health",
             "model_status": "/api/model-status"
         },
@@ -152,6 +177,10 @@ async def chat_info():
             "ahbeng": {
                 "endpoint": "/api/chat/ahbeng",
                 "status": ahbeng_service.get_model_status()
+            },
+            "nsf": {
+                "endpoint": "/api/chat/nsf",
+                "status": nsf_service.get_model_status()
             }
         },
         "status": "operational"

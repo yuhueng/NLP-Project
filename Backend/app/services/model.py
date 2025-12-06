@@ -264,10 +264,65 @@ class AhBengModelService(BaseModelService):
         }
 
 
+class NSFModelService(BaseModelService):
+    """
+    Model service for NSF (National Serviceman) persona chatbot.
+    Uses HuggingFace endpoint.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._load_model()
+
+    def get_persona_name(self) -> str:
+        return "NSF"
+
+    def _load_model(self):
+        """Initialize the HuggingFace inference client for NSF."""
+        try:
+            logger.info("Initializing NSF HuggingFace inference client...")
+
+            self.client = Client(
+                "yuhueng/nsf-persona",
+                token=settings.hf_token
+            )
+
+            self.model_loaded = True
+            logger.info("NSF HuggingFace inference client initialized successfully!")
+
+        except Exception as e:
+            logger.warning(f"NSF model not available: {str(e)}")
+            # For now, allow it to fail gracefully with a placeholder response
+            self.client = None
+            self.model_loaded = False
+
+    def generate_response(self, message: str, conversation_history: List[ChatMessage] = None) -> Dict[str, str]:
+        """Generate NSF persona response."""
+        if not self.model_loaded:
+            # Placeholder response when model is not loaded
+            return {
+                'response': f"Eh bro, ORD loh! (Placeholder response) You said: {message}",
+                'safety': "Safe"
+            }
+        return super().generate_response(message, conversation_history)
+
+    def get_model_status(self) -> Dict[str, Any]:
+        """Get the current status of the NSF model service."""
+        base_status = super().get_model_status()
+        return {
+            **base_status,
+            "inference_type": "HuggingFace API",
+            "hf_space": "yuhueng/nsf-persona",
+            "local_model": "No (remote inference)",
+            "status": "active"
+        }
+
+
 # Singleton instances for each persona
 singlish_service = SinglishModelService()
 xmm_service = XMMModelService()
 ahbeng_service = AhBengModelService()
+nsf_service = NSFModelService()
 
 # Keep backward compatibility
 model_service = singlish_service

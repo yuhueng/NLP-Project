@@ -62,6 +62,15 @@ function ChatWindow({
           "What's happening tonight?",
           "Tell me your story"
         ]
+      case 'nsf':
+        return [
+          "How many days to ORD?",
+          "Tell me about tekong stories",
+          "What's the best cookhouse food?",
+          "Share some NSF tips",
+          "Talk about guard duty",
+          "Any funny camp stories?"
+        ]
       default: // xmm and others
         return [
           "What's trending today?",
@@ -113,6 +122,8 @@ function ChatWindow({
                 ? "Ask me anything about Singapore culture, Singlish phrases, local food, or anything else!"
                 : currentPersona === 'ahbeng'
                 ? "Wah bro! Talk to me about anything lah - cars, food, life stories, you name it!"
+                : currentPersona === 'nsf'
+                ? "Eh bro, welcome to NSF life! Share your NS stories, ask about army tips, or just lepak and chat!"
                 : "Chat with the XMM persona! Ask me anything you like."}
             </p>
 

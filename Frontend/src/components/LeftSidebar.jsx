@@ -22,6 +22,13 @@ function LeftSidebar({ onNewChat, onPersonaChange, currentPersona = "singlish" }
       icon: "😎",
       description: "Classic Ah Beng style",
       endpoint: "/chat/ahbeng"
+    },
+    {
+      id: "nsf",
+      name: "NSF",
+      icon: "🎖️",
+      description: "National Serviceman persona",
+      endpoint: "/chat/nsf"
     }
   ]
 
