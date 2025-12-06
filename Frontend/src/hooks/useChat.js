@@ -86,6 +86,7 @@ function useChat() {
   const clearMessages = useCallback(() => {
     setMessages([]);
     setError(null);
+    setInputMessage('');
   }, []);
 
   const retryLastMessage = useCallback(() => {

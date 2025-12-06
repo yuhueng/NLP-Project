@@ -11,7 +11,8 @@ function App() {
     isLoading,
     isBackendReady,
     currentPersona,
-    setCurrentPersona
+    setCurrentPersona,
+    clearMessages
   } = useChat()
 
   return (
@@ -25,6 +26,7 @@ function App() {
         isBackendReady={isBackendReady}
         currentPersona={currentPersona}
         setCurrentPersona={setCurrentPersona}
+        clearMessages={clearMessages}
       />
     </ThemeProvider>
   )

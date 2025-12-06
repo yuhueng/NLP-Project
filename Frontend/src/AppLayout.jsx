@@ -3,18 +3,18 @@ import Header from './components/Header'
 import LeftSidebar from './components/LeftSidebar'
 import ChatWindow from './components/ChatWindow'
 
-function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading, isBackendReady, currentPersona, setCurrentPersona }) {
+function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoading, isBackendReady, currentPersona, setCurrentPersona, clearMessages }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleNewChat = () => {
-    // Clear messages and start fresh chat - needs to be implemented in useChat
-    setInputMessage('')
-    window.location.reload() // Temporary solution to clear chat
+    // Clear messages and start fresh chat
+    clearMessages()
   }
 
   const handlePersonaChange = (personaId) => {
+    // Clear chat when changing persona
+    clearMessages()
     setCurrentPersona(personaId)
-    // You might want to apply persona-specific settings here
   }
 
   return (
@@ -26,9 +26,9 @@ function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoa
       />
 
       {/* Main Content Area - Takes remaining height */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden h-full">
         {/* Left Sidebar - Collapsible */}
-        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 flex-shrink-0 overflow-hidden`}>
+        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 flex-shrink-0 overflow-hidden h-full`}>
           <LeftSidebar
             onNewChat={handleNewChat}
             onPersonaChange={handlePersonaChange}
@@ -49,7 +49,7 @@ function AppLayout({ messages, inputMessage, setInputMessage, sendMessage, isLoa
         )}
 
         {/* Chat Window - Takes remaining space */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2 bg-gray-200 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
