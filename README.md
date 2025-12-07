@@ -1,19 +1,10 @@
-Here is the **complete, final version of the README.md**.
-
-I have integrated the **Google Colab/Training details**, the **Model Repository links**, and the **Interactive ZeroSpace Demo links** you provided into the correct sections. I also ensured the formatting is consistent, professional, and emoji-free.
-
-You can copy and paste this entire block to replace your current file.
-
----
-
 # Developing a Culturally Grounded Singlish-Adapted Conversational Simulator for Persona-Driven Interactions in Singapore
 
 A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters.
 
 ## Authors
 
-**Austin Isaac, Jithin Bathula, Ng Yu Hueng, Tang Zhi-Ju Edward, Siew Rui Ze Zayne**
-_Singapore University of Technology and Design (SUTD)_
+**Ng Yu Hueng, Austin Isaac, Jithin Bathula, Tang Zhi-Ju Edward, Siew Rui Ze Zayne**
 
 ## Tech Stack
 
@@ -249,14 +240,6 @@ python app/main.py
   - Text: `#111827` (gray-900)
 - **Typography:** Sans-serif, 16px base.
 - **Responsive:** Mobile-first with breakpoints at 640px, 768px, 1024px.
-
-## Contributing
-
-1.  Follow the existing code style and conventions.
-2.  Use functional components with hooks (React).
-3.  Implement proper error handling.
-4.  Add appropriate types and validation.
-5.  Test thoroughly before submitting.
 
 ## Troubleshooting
 
