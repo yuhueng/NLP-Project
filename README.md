@@ -1,11 +1,3 @@
-Here is the **complete, final version of the README.md**.
-
-I have integrated the **Google Colab/Training details**, the **Model Repository links**, and the **Interactive ZeroSpace Demo links** you provided into the correct sections. I also ensured the formatting is consistent, professional, and emoji-free.
-
-You can copy and paste this entire block to replace your current file.
-
----
-
 # Developing a Culturally Grounded Singlish-Adapted Conversational Simulator for Persona-Driven Interactions in Singapore
 
 A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters.
