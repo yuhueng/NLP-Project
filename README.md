@@ -1,6 +1,6 @@
 # Developing a Culturally Grounded Singlish-Adapted Conversational Simulator for Persona-Driven Interactions in Singapore
 
-A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters.
+A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters. (Demo) [https://yh-singlish-chatbot.vercel.app/]
 
 ## Authors
 
@@ -38,8 +38,8 @@ Our project utilizes a "Mixture of Personas" approach. Below are the links to th
 Experience the fine-tuned personas directly through our hosted ZeroSpace environments:
 
 - **Singlish Base Demo:** [SinglishTest Space](https://huggingface.co/spaces/yuhueng/SinglishTest)
-- **NSF Persona Demo:** [NSF Persona Space](https://www.google.com/search?q=https://huggingface.co/spaces/yuhueng/nsf-persona/)
-- **Ah Beng Persona Demo:** [Ah Beng Persona Space](https://www.google.com/search?q=https://huggingface.co/spaces/yuhueng/ahbeng-persona/)
+- **NSF Persona Demo:** [NSF Persona Space](https://huggingface.co/spaces/yuhueng/nsf-persona/)
+- **Ah Beng Persona Demo:** [Ah Beng Persona Space](https://huggingface.co/spaces/yuhueng/ahbeng-persona/)
 - **XMM Persona Demo:** [XMM Persona Space](https://huggingface.co/spaces/yuhueng/xmm-persona)
 
 ### Trained Model Weights
