@@ -1,6 +1,6 @@
 # Developing a Culturally Grounded Singlish-Adapted Conversational Simulator for Persona-Driven Interactions in Singapore
 
-A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters. (Demo) [https://yh-singlish-chatbot.vercel.app/]
+A minimalist chat interface for a fine-tuned Singlish conversational AI. This system is built with a React (Vite) frontend and a FastAPI backend serving a trained model with LoRA adapters. [Demo](https://yh-singlish-chatbot.vercel.app/)
 
 ## Authors
 
