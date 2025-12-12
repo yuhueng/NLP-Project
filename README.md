@@ -6,6 +6,9 @@ A minimalist chat interface for a fine-tuned Singlish conversational AI. This sy
 
 **Ng Yu Hueng, Austin Isaac, Jithin Bathula, Tang Zhi-Ju Edward, Siew Rui Ze Zayne**
 
+## Architecture
+<img width="1793" height="918" alt="Paktor-Anot pptx" src="https://github.com/user-attachments/assets/b89b79ac-ade5-4cfa-aedb-fa767ca106c3" />
+
 ## Tech Stack
 
 - **Frontend:** React 18+, Vite, Tailwind CSS, Axios
